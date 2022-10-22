@@ -7,6 +7,7 @@ items:
       data: 0
       name: ""
       amount: 1
+      enchant: false
       slots:
         - 0
         - 1
@@ -37,17 +38,17 @@ items:
   # The name of the section must be the same as the name of the investment
   investments-items:
     investment1:
-      type: NETHER_STAR
-      data: 0
-      name: "30 minutes"
+      type: IRON_AXE
+      name: "&60h 30m 0s"
+      glow: true
       lore:
         - " "
-        - "Deposit 500$"
-        - "Withdraw 1000$"
+        - "&b» Deposit &F500$"
+        - "&b» Withdraw &F1000$"
         - " "
-        - "Stay in the area for 30 minutes"
-        - "to get your reward."
+        - "&b»Stay in the area for &F0h 30m 0s"
+        - "&b»to get your reward."
         - " "
-        - "Slot: 14"
+        - "&7Slot: 23"
       amount: 1
-      slot: 13
+      slot: 22

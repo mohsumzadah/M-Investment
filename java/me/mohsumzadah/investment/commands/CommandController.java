@@ -35,13 +35,13 @@ public class CommandController implements CommandExecutor {
                             player.hasPermission("investment.gui")) {
                         FileConfiguration gui = Investment.plugin.gui;
                         Inventory inventory = Bukkit.createInventory(player, gui.getInt("size"),
-                                ChatColor.LIGHT_PURPLE + gui.getString("name"));
+                                gui.getString("name"));
 
-                        ConfigurationSection gui_red_glass = gui.getConfigurationSection("items.idle-items.white-glasses");
-                        for (Integer number : gui_red_glass.getIntegerList("slots")) {
-                            createInventory(gui_red_glass.getString("type"), gui_red_glass.getInt("amount"),
-                                    gui_red_glass.getString("name"),
-                                    (List<String>) gui_red_glass.getList("lore"), inventory, number);
+                        ConfigurationSection idle_items = gui.getConfigurationSection("items.idle-items.white-glasses");
+                        for (Integer number : idle_items.getIntegerList("slots")) {
+                            createInventory(idle_items.getString("type"), idle_items.getInt("amount"),
+                                    idle_items.getString("name"),
+                                    idle_items.getStringList("lore"), inventory, number, idle_items.getBoolean("glow"));
                         }
 
                         ConfigurationSection investments_items = gui.getConfigurationSection("items.investments-items");
@@ -49,13 +49,9 @@ public class CommandController implements CommandExecutor {
                             ConfigurationSection itc = investments_items.getConfigurationSection(invest_type);
                             createInventory(itc.getString("type"), itc.getInt("amount"),
                                     itc.getString("name"),
-                                    (List<String>) itc.getList("lore"), inventory, itc.getInt("slot"));
+                                    itc.getStringList("lore"), inventory, itc.getInt("slot"),
+                                    itc.getBoolean("glow"));
                         }
-
-//                        ConfigurationSection other_items = gui.getConfigurationSection("items.other-items.emerald");
-//                        createInventory(other_items.getString("type"), other_items.getInt("amount"),
-//                                other_items.getString("name"),
-//                                (List<String>) other_items.getList("lore"), inventory, other_items.getInt("slot"));
 
                         player.openInventory(inventory);
 
@@ -137,6 +133,7 @@ public class CommandController implements CommandExecutor {
                             Investment.plugin.block1 = null;
                             Investment.plugin.block2 = null;
 
+                            Investment.plugin.getCoolDownManager().setAllPlayersIsNotOnRegion();
                             player.sendMessage(name + ChatColor.WHITE + "Investment area removed!");
                         }
                     } else {
@@ -161,27 +158,28 @@ public class CommandController implements CommandExecutor {
 
                         List<String> lores = new ArrayList<>();
                         lores.add(0, " ");
-                        lores.add(1, "Deposit " + inv_deposit + "$");
-                        lores.add(2, "Withdraw " + inv_withdraw + "$");
+                        lores.add(1, "&b» Deposit " +"&F"+ inv_deposit + "$");
+                        lores.add(2, "&b« Withdraw " +"&F"+ inv_withdraw + "$");
                         lores.add(3, " ");
-                        lores.add(4, "Stay in the area for " +
-                                time_hours + "h " + time_minute + "m " + time_second + "s ");
-                        lores.add(5, "to get your reward");
+                        lores.add(4, "&bStay in the area for " +
+                                "&F" + time_hours + "h " + time_minute + "m " + time_second + "s ");
+                        lores.add(5, "&bto get your reward");
                         lores.add(6, " ");
-                        lores.add(7, "Slot: " + args[5]);
+                        lores.add(7, "&7Slot: " + args[5]);
 
-                        Investment.plugin.gui.set("items.investments-items." + inv_name + ".type", "NETHER_STAR");
-                        Investment.plugin.gui.set("items.investments-items." + inv_name + ".data", 0);
+                        Investment.plugin.gui.set("items.investments-items." + inv_name + ".type", "IRON_AXE");
                         Investment.plugin.gui.set("items.investments-items." + inv_name + ".name",
-                                (time_hours + "h " + time_minute + "m " + time_second + "s "));
+                                ChatColor.GOLD + (time_hours + "h " + time_minute + "m " + time_second + "s "));
                         Investment.plugin.gui.set("items.investments-items." + inv_name + ".lore", lores);
                         Investment.plugin.gui.set("items.investments-items." + inv_name + ".amount", 1);
                         Investment.plugin.gui.set("items.investments-items." + inv_name + ".slot", inv_slot);
+                        Investment.plugin.gui.set("items.investments-items." + inv_name + ".enchant", true);
                         Investment.plugin.saveGuiConfig();
 
                         Investment.plugin.invest.set("investments." + inv_name + ".stayTime", inv_second);
                         Investment.plugin.invest.set("investments." + inv_name + ".investDeposit", inv_deposit);
                         Investment.plugin.invest.set("investments." + inv_name + ".investWithdraw", inv_withdraw);
+
                         Investment.plugin.saveInvestConfig();
 
                         player.sendMessage(Investment.plugin.pluginName+"'"+inv_name+"' investment plan created.");
@@ -218,16 +216,24 @@ public class CommandController implements CommandExecutor {
     }
 
 
-    private void createInventory(String item_type, Integer item_amount, String name, List<String> lores,  Inventory inventory, Integer slot){
+    private void createInventory(String item_type, Integer item_amount, String name, List<String> lores,
+                                 Inventory inventory, Integer slot, Boolean bool){
         ItemStack item = new ItemStack(Material.getMaterial(item_type), item_amount);
         ItemMeta itemMeta = item.getItemMeta();
-        itemMeta.setDisplayName(name);
-        item.setItemMeta(itemMeta);
+        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&',name));
 
-        List<String> lore;
-        lore = lores;
+        List<String> new_lore = new ArrayList<>();
+        for (String lore : lores){
+            new_lore.add(ChatColor.translateAlternateColorCodes('&', lore));
+        }
 
-        itemMeta.setLore(lore);
+        itemMeta.setLore(new_lore);
+
+        if (bool){
+            itemMeta.addEnchant(Enchantment.PROTECTION_FALL, 0, true);
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
 
         item.setItemMeta(itemMeta);
         inventory.setItem(slot, item);

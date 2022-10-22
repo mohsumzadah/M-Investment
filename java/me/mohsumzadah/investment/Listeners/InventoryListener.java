@@ -4,6 +4,7 @@ import me.mohsumzadah.investment.Investment;
 import me.mohsumzadah.investment.manager.CoolDownManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,17 +26,15 @@ public class InventoryListener implements Listener {
         FileConfiguration gui = Investment.plugin.gui;
 
         InventoryView inv = event.getView();
-        if(inv.getTitle().equals(ChatColor.LIGHT_PURPLE +
-                gui.getString("name"))){
-
-            if(!Investment.plugin.player_data.getConfigurationSection("players")
-                    .contains(String.valueOf(player.getUniqueId()))) {
+        if(inv.getTitle().equals(gui.getString("name"))){
+//            Investment.plugin.player_data.getConfigurationSection("players")
+//                    .contains(String.valueOf(player.getUniqueId()))
+            if(!Investment.plugin.getCoolDownManager().isPlayerOnMap(player)) {
                 String invest_type_name = event.getCurrentItem().getItemMeta().getDisplayName();
-
                 for (String invest_name : Investment.plugin.invest
                         .getConfigurationSection("investments").getKeys(false)) {
-                    if (Investment.plugin.gui.
-                            getString("items.investments-items." + invest_name + ".name").equals(invest_type_name)) {
+                    if (ChatColor.translateAlternateColorCodes('&', Investment.plugin.gui.
+                            getString("items.investments-items." + invest_name + ".name")).equals(invest_type_name)) {
 
                         ConfigurationSection investment_data = Investment.plugin.invest
                                 .getConfigurationSection("investments." + invest_name);

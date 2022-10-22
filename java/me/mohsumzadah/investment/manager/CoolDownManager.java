@@ -68,8 +68,6 @@ public class CoolDownManager {
 
     }
 
-
-
     public void removePlayerToMap(Player player){
         playerCooldownMap.remove(player.getUniqueId());
         playerInRegionBooleanMap.remove(player.getUniqueId());
@@ -93,6 +91,12 @@ public class CoolDownManager {
 
     public void setplayerIsNotOnRegion(Player player){
         playerInRegionBooleanMap.put(player.getUniqueId(), false);
+    }
+
+    public void setAllPlayersIsNotOnRegion(){
+        for (UUID uuid : playerInRegionBooleanMap.keySet()){
+            playerInRegionBooleanMap.put(uuid, false);
+        }
     }
 
     public boolean isPlayerOnRegion(Player player){

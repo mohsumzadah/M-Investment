@@ -1,5 +1,5 @@
 investments:
   investment1:
-    stayTime: 15
+    stayTime: 1800
     investDeposit: 1000
     investWithdraw: 2000

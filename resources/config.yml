@@ -1,0 +1,7 @@
+Settings:
+  refund-percentage: 50
+  investment_area:
+    first_block:
+      location:
+    second_block:
+      location:

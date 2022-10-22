@@ -1,0 +1,6 @@
+name: M-Investment
+version: '${project.version}'
+main: me.mohsumzadah.investment.Investment
+api-version: 1.13
+commands:
+  investment:

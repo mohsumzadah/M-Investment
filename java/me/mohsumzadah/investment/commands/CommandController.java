@@ -207,6 +207,7 @@ public class CommandController implements CommandExecutor {
                     }else {
                         player.sendMessage(name + ChatColor.RED + "You don't have 'investment.remove' permission for that!");
                     }
+
                 }
 
 

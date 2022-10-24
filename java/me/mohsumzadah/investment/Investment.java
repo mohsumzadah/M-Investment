@@ -3,6 +3,7 @@ package me.mohsumzadah.investment;
 import me.mohsumzadah.investment.Listeners.InventoryListener;
 import me.mohsumzadah.investment.Listeners.PlayerMoveRegion;
 import me.mohsumzadah.investment.Listeners.ToolListener;
+import me.mohsumzadah.investment.commands.CommandCompilator;
 import me.mohsumzadah.investment.commands.CommandController;
 import me.mohsumzadah.investment.manager.CoolDownManager;
 import net.milkbowl.vault.economy.Economy;
@@ -50,6 +51,7 @@ public final class Investment extends JavaPlugin {
 
 
         getCommand("investment").setExecutor(new CommandController());
+        getCommand("investment").setTabCompleter(new CommandCompilator());
 
         getServer().getPluginManager().registerEvents(new ToolListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryListener(), this);

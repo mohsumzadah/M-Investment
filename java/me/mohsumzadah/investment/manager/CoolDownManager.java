@@ -5,7 +5,6 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -30,8 +29,10 @@ public class CoolDownManager {
                              Integer withdraw_money = Investment.plugin.invest.getInt("investments."
                                      +playerInvestmentType.get(uuid)+".investWithdraw");
                              economy.depositPlayer(player, withdraw_money);
-                             player.sendMessage(Investment.plugin.pluginName +
-                                     "You earned " +withdraw_money+"$");
+                             player.sendMessage(Investment.plugin
+                                     .returnReplaceMessage(false,"feedback-earned-money",
+                                             "withdraw_money",
+                                             withdraw_money.toString()));
                              removePlayerToMap(player);
                              continue;
                          }
@@ -44,12 +45,12 @@ public class CoolDownManager {
                          int time_minute = (time % 3600) / 60;
                          int time_second = time % 60;
 
+                         String str = Investment.plugin.returnReplaceMessage(true,"action-bar-message",
+                                 "time_hours", String.valueOf(time_hours))
+                                 .replaceAll("%time_minute%", String.valueOf(time_minute))
+                                 .replaceAll("%time_second%", String.valueOf(time_second));
                          Bukkit.getOfflinePlayer(uuid).getPlayer().spigot().sendMessage(
-                                 ChatMessageType.ACTION_BAR,
-                                 new TextComponent(ChatColor.WHITE +"Time remaining: "+
-                                         ChatColor.AQUA+time_hours+ChatColor.WHITE+"h "+
-                                         ChatColor.AQUA+time_minute+ChatColor.WHITE+"m "+
-                                         ChatColor.AQUA+time_second+ChatColor.WHITE+"s."));
+                                 ChatMessageType.ACTION_BAR, new TextComponent(str));
 
                      }
                  }

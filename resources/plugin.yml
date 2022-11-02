@@ -4,3 +4,6 @@ main: me.mohsumzadah.investment.Investment
 api-version: 1.13
 commands:
   investment:
+    aliases: [invest]
+    description: Stay AFK on chosen area, earn money
+

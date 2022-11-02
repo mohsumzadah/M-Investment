@@ -41,17 +41,16 @@ public class PlayerMoveRegion implements Listener {
                 }else {
                     player.spigot().sendMessage(
                             ChatMessageType.ACTION_BAR,
-                            new TextComponent(ChatColor.WHITE +"No investment in progress - "+
-                                    ChatColor.AQUA+"Do " +ChatColor.WHITE+"/investment"+
-                                    ChatColor.AQUA+" to start"));
+                            new TextComponent(Investment.plugin
+                                    .returnMessage(true,"area-no-inv-progress")));
                 }
             }
             else {
                 if(Investment.plugin.getCoolDownManager().isPlayerOnMap(player)) {
                     if (Investment.plugin.getCoolDownManager().isPlayerOnRegion(player)) {
                         Investment.plugin.getCoolDownManager().setplayerIsNotOnRegion(player);
-                        player.sendMessage(Investment.plugin.pluginName+"You are not in region. Cooldown stopted!");
-
+                        player.sendMessage(Investment.plugin
+                                .returnMessage(false,"area-not-in-region"));
                     }
                 }
             }

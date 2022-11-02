@@ -56,7 +56,12 @@ public class CommandController implements CommandExecutor {
                         player.openInventory(inventory);
 
                     } else {
-                        player.sendMessage(name + ChatColor.RED + "You don't have permissions for that!");
+                        String permission = "investment.gui";
+                        player.sendMessage(Investment.plugin.pluginName + ChatColor
+                                .translateAlternateColorCodes('&',
+                                        Investment.plugin.message
+                                        .getString("dont-have-permission")
+                                        .replaceAll("%permission%", permission)));
                     }
                 }
                 
@@ -73,10 +78,15 @@ public class CommandController implements CommandExecutor {
 
 
                          Investment.plugin.getCoolDownManager().removePlayerToMap(player);
-                         player.sendMessage(Investment.plugin.pluginName + "You invest plan canceled and " +
-                                 Investment.plugin.config.getInt("Settings.refund-percentage")+
-                                 " percent of your money is back - " +refund_money+"$");
+                         int refundPercentage = Investment.plugin.config.getInt("Settings.refund-percentage");
+                         player.sendMessage(Investment.plugin.returnReplaceMessage(false, "feedback-cancel-inv-plan",
+                                 "refund_percentage", String.valueOf(refundPercentage))
+                                 .replaceAll("%refund_money%", String.valueOf(refund_money)));
 
+                    }else {
+                        String permission = "investment.stop";
+                        player.sendMessage(Investment.plugin.returnReplaceMessage(false,"dont-have-permission",
+                                "permission",permission));
                     }
                 }
 
@@ -88,12 +98,12 @@ public class CommandController implements CommandExecutor {
                             ItemStack tool = new ItemStack(Material.STICK);
                             ItemMeta meta = tool.getItemMeta();
 
-                            meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Investment Tool");
+                            meta.setDisplayName(Investment.plugin.returnMessage(true,"tool-name"));
 
                             List<String> lore = new ArrayList<>();
-                            lore.add(0, ChatColor.WHITE + "For choosing area");
-                            lore.add(1, ChatColor.WHITE + "Left click - first block");
-                            lore.add(2, ChatColor.WHITE + "Right click - second block");
+                            lore.add(0, Investment.plugin.returnMessage(true,"tool-lore-1"));
+                            lore.add(1, Investment.plugin.returnMessage(true,"tool-lore-2"));
+                            lore.add(2, Investment.plugin.returnMessage(true,"tool-lore-3"));
                             meta.setLore(lore);
 
                             meta.addEnchant(Enchantment.ARROW_INFINITE, 0, true);
@@ -115,13 +125,13 @@ public class CommandController implements CommandExecutor {
                                 Investment.plugin.saveDataConfig();
                                 Investment.plugin.block1 = null;
                                 Investment.plugin.block2 = null;
-                                player.sendMessage(name + ChatColor.GRAY + "Investment area selected!");
+                                player.sendMessage(Investment.plugin.returnMessage(false, "area-selected"));
                             } else if (first == null && second == null) {
-                                player.sendMessage(name + ChatColor.GRAY + "Please select two block with tool");
+                                player.sendMessage(Investment.plugin.returnMessage(false, "area-no-block-selected"));
                             } else if (first == null) {
-                                player.sendMessage(name + ChatColor.GRAY + "Please select first block with tool");
+                                player.sendMessage(Investment.plugin.returnMessage(false, "area-select-first-block"));
                             } else if (second == null) {
-                                player.sendMessage(name + ChatColor.GRAY + "Please select second block with tool");
+                                player.sendMessage(Investment.plugin.returnMessage(false, "area-select-second-block"));
                             }
                         }
                         else if (args[1].equalsIgnoreCase("remove")) {
@@ -134,10 +144,13 @@ public class CommandController implements CommandExecutor {
                             Investment.plugin.block2 = null;
 
                             Investment.plugin.getCoolDownManager().setAllPlayersIsNotOnRegion();
-                            player.sendMessage(name + ChatColor.WHITE + "Investment area removed!");
+                            player.sendMessage(Investment.plugin.returnMessage(false, "area-removed"));
                         }
-                    } else {
-                        player.sendMessage(name + ChatColor.RED + "You don't have 'investment.area' permissions for that!");
+                    }
+                    else {
+                        String permission = "investment.area";
+                        player.sendMessage(Investment.plugin.returnReplaceMessage(false,
+                                "dont-have-permission","permission",permission));
                     }
                 }
 
@@ -182,10 +195,14 @@ public class CommandController implements CommandExecutor {
 
                         Investment.plugin.saveInvestConfig();
 
-                        player.sendMessage(Investment.plugin.pluginName+"'"+inv_name+"' investment plan created.");
+                        player.sendMessage(Investment.plugin.returnReplaceMessage(false,"feedback-inv-created",
+                                "inv_name", inv_name));
 
-                    } else {
-                        player.sendMessage(name + ChatColor.RED + "You don't have 'investment.create' permissions for that!");
+                    }
+                    else {
+                        String permission = "investment.create";
+                        player.sendMessage(Investment.plugin.returnReplaceMessage(false,
+                                "dont-have-permission","permission",permission));
                     }
                 }
                 else if (args[0].equalsIgnoreCase("remove") && args.length == 2){
@@ -199,13 +216,17 @@ public class CommandController implements CommandExecutor {
                             if(investments_items.getInt(invest_type+".slot") == slot){
                                 Investment.plugin.gui.set("items.investments-items."+invest_type, null);
                                 Investment.plugin.invest.set("investments."+invest_type, null);
-                                player.sendMessage(Investment.plugin.pluginName+"'"+invest_type+"' investment plan removed.");
+                                player.sendMessage(Investment.plugin.returnReplaceMessage(false,"feedback-inv-created",
+                                        "inv_name", invest_type));
                             }
                         }
 
 
-                    }else {
-                        player.sendMessage(name + ChatColor.RED + "You don't have 'investment.remove' permission for that!");
+                    }
+                    else {
+                        String permission = "investment.remove";
+                        player.sendMessage(Investment.plugin.returnReplaceMessage(false,
+                                "dont-have-permission","permission",permission));
                     }
 
                 }

@@ -1,0 +1,37 @@
+#used colors
+#white-color - &f
+#aqua-color - &b
+#red-color - &c
+#grey-color - &7
+#light-purple-color - &d
+#bold-text - &l
+
+#DONT CHANGE TAG NAMES
+feedback-inv-created: "&7'%inv_name%' investment plan created."
+feedback-inv-removed: "&7'%inv_name%' investment plan removed."
+feedback-earned-money: "&fYou earned %withdraw_money%$"
+feedback-already-hava-inv: "&fYou have already investment plan. You can't choose again."
+feedback-cancel-inv-plan: "&fYour investment plan canceled and %refund_percentage% percent of your money is back - %refund_money%$"
+feedback-invested-money: "&fYou invested %deposit_money%$. Please go to investment area."
+feedback-no-enough-money: "&fYou don't have %deposit_money%$ for deposit."
+
+tool-first-block-selected: "&7First block selected to (%XYZ%)."
+tool-second-block-selected: "&7Second block selected to (%XYZ%)."
+tool-noperm-usage: "%player_name% &btried use investment area tool. Tool removed from player inventory."
+
+area-selected: "&7Investment area selected!"
+area-removed: "&7Investment area removed!"
+area-no-block-selected: "&7Please select two block with tool"
+area-select-first-block: "&7Please select first block with tool"
+area-select-second-block: "&7Please select second block with tool"
+area-not-in-region: "&fYou are not in region. Cool down stopped!"
+area-no-inv-progress: "&fNo investment in progress - &bDo &f/investment &bto start"
+action-bar-message: "&fTime remaining: &b%time_hours%&fh &b%time_minute%&fm &b%time_second%&fs."
+
+dont-have-permission: "&c&lYou don't have '%permission%' permission for use this!"
+
+#INVESTMENT-TOOL-INFOS
+tool-name: "&dInvestment Tool"
+tool-lore-1: "&fFor choosing area"
+tool-lore-2: "&fLeft click - first block"
+tool-lore-3: "&fRight click - second block"

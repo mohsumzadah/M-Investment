@@ -1,19 +1,13 @@
 package me.mohsumzadah.investment.Listeners;
 
 import me.mohsumzadah.investment.Investment;
-import me.mohsumzadah.investment.manager.CoolDownManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.milkbowl.vault.chat.Chat;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 
 public class InventoryListener implements Listener {
@@ -23,12 +17,9 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void clickInventory(InventoryClickEvent event){
         Player player = (Player) event.getWhoClicked();
-        FileConfiguration gui = Investment.plugin.gui;
 
         InventoryView inv = event.getView();
-        if(inv.getTitle().equals(gui.getString("name"))){
-//            Investment.plugin.player_data.getConfigurationSection("players")
-//                    .contains(String.valueOf(player.getUniqueId()))
+        if(inv.getTitle().equals(Investment.plugin.gui.getString("name"))){
             if(!Investment.plugin.getCoolDownManager().isPlayerOnMap(player)) {
                 String invest_type_name = event.getCurrentItem().getItemMeta().getDisplayName();
                 for (String invest_name : Investment.plugin.invest
@@ -44,8 +35,9 @@ public class InventoryListener implements Listener {
                             Investment.getEconomy().withdrawPlayer(player, investment_data.getInt("investDeposit"));
                             Investment.plugin.getCoolDownManager()
                                     .addPlayerToMap(player, investment_data.getInt("stayTime"), invest_name);
-                            player.sendMessage(Investment.plugin.pluginName + "You invested " +
-                                    investment_data.getInt("investDeposit") + "$. Please go to investment area.");
+                            int investDeposit = investment_data.getInt("investDeposit");
+                            player.sendMessage(Investment.plugin.returnReplaceMessage(false,
+                                    "feedback-invested-money", "deposit_money", String.valueOf(investDeposit)));
                             event.setCancelled(true);
                             inv.close();
 
@@ -77,8 +69,10 @@ public class InventoryListener implements Listener {
                             }
 
                         } else {
-                            player.sendMessage(Investment.plugin.pluginName + "You don't have " +
-                                    investment_data.getInt("investDeposit") + "$ for deposit.");
+                            int deposit_money = investment_data.getInt("investDeposit");
+                            player.sendMessage(Investment.plugin.returnReplaceMessage(false,
+                                    "feedback-no-enough-money","deposit_money",
+                                    String.valueOf(deposit_money)));
                             event.setCancelled(true);
                             inv.close();
                         }
@@ -88,7 +82,7 @@ public class InventoryListener implements Listener {
                 }
             }
             else {
-                player.sendMessage(Investment.plugin.pluginName+ChatColor.RED+"You have investment plan. You can't choose again.");
+                player.sendMessage(Investment.plugin.returnMessage(false, "feedback-already-hava-inv"));
                 event.setCancelled(true);
                 inv.close();
             }

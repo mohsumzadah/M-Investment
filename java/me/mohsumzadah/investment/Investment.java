@@ -48,6 +48,7 @@ public final class Investment extends JavaPlugin {
         createGuiFile();
         createInvestFile();
         createPlayerDataFile();
+        createMessageFile();
 
 
         getCommand("investment").setExecutor(new CommandController());
@@ -137,6 +138,22 @@ public final class Investment extends JavaPlugin {
         }
     }
 
+    private File messagef;
+    public FileConfiguration message;
+    private void createMessageFile(){
+        messagef = new File(getDataFolder(), "messages.yml");
+        if(!messagef.exists()){
+            messagef.getParentFile().mkdirs();
+            saveResource("messages.yml",false);
+        }
+        message = new YamlConfiguration();
+        try {
+            message.load(messagef);
+        }catch (IOException | InvalidConfigurationException e){
+            e.printStackTrace();
+        }
+    }
+
     // PLAYER_DATA FILE
     private File player_dataf;
     public FileConfiguration player_data;
@@ -193,5 +210,29 @@ public final class Investment extends JavaPlugin {
         return coolDownManager;
     }
 
+    public String returnReplaceMessage(Boolean skipName, String path, String replace_key, String replace_text){
+        if (skipName){
+            return (ChatColor.translateAlternateColorCodes('&',
+                            Investment.plugin.message
+                                    .getString(path)
+                                    .replaceAll("%"+replace_key+"%", replace_text)));
+        }else {
+            return (pluginName + ChatColor.translateAlternateColorCodes('&',
+                            Investment.plugin.message
+                                    .getString(path)
+                                    .replaceAll("%"+replace_key+"%", replace_text)));
+        }
+    }
+    public String returnMessage(Boolean skipName,String path){
+        if(skipName){
+            return ChatColor.translateAlternateColorCodes('&',
+                    Investment.plugin.message
+                            .getString(path));
+        }else {
+            return pluginName + ChatColor.translateAlternateColorCodes('&',
+                    Investment.plugin.message
+                            .getString(path));
+        }
 
+    }
 }

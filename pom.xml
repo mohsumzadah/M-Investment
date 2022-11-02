@@ -6,7 +6,7 @@
 
     <groupId>me.mohsumzadah</groupId>
     <artifactId>M-Investment</artifactId>
-    <version>0.4</version>
+    <version>0.5</version>
     <packaging>jar</packaging>
 
     <name>M-Investment</name>

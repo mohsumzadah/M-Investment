@@ -17,6 +17,7 @@ public class CoolDownManager {
     public final Map<UUID, Boolean> playerInRegionBooleanMap = new HashMap<>();
 
     public final Map<UUID, String> playerInvestmentType = new HashMap<>();
+    public List<UUID> removeList = new ArrayList<>();
 
     public CoolDownManager(Investment plugin){
          new BukkitRunnable(){
@@ -24,34 +25,39 @@ public class CoolDownManager {
              public void run() {
                  for(UUID uuid : playerCooldownMap.keySet()){
                      if(playerInRegionBooleanMap.get(uuid)) {
-                         if (playerCooldownMap.get(uuid) == 1) {
-                             Player player = Bukkit.getOfflinePlayer(uuid).getPlayer();
-                             Integer withdraw_money = Investment.plugin.invest.getInt("investments."
-                                     +playerInvestmentType.get(uuid)+".investWithdraw");
-                             economy.depositPlayer(player, withdraw_money);
-                             player.sendMessage(Investment.plugin
-                                     .returnReplaceMessage(false,"feedback-earned-money",
-                                             "withdraw_money",
-                                             withdraw_money.toString()));
-                             removePlayerToMap(player);
-                             continue;
+                         try {
+                             if (playerCooldownMap.get(uuid) == 1) {
+                                 Player player = Bukkit.getOfflinePlayer(uuid).getPlayer();
+                                 Integer withdraw_money = Investment.plugin.invest.getInt("investments."
+                                         + playerInvestmentType.get(uuid) + ".investWithdraw");
+                                 economy.depositPlayer(player, withdraw_money);
+                                 player.sendMessage(Investment.plugin
+                                         .returnReplaceMessage(false, "feedback-earned-money",
+                                                 "withdraw_money",
+                                                 withdraw_money.toString()));
+                                 removePlayerToMap(player);
+                                 continue;
+                             }
+                             playerCooldownMap.put(uuid, (playerCooldownMap.get(uuid) - 1));
+                             int time = playerCooldownMap.get(uuid);
+                             Investment.plugin.player_data.set("players." + uuid + ".second_left", time);
+                             Investment.plugin.savePlayerDataConfig();
+
+                             int time_hours = time / 3600;
+                             int time_minute = (time % 3600) / 60;
+                             int time_second = time % 60;
+
+                             String str = Investment.plugin.returnReplaceMessage(true, "action-bar-message",
+                                             "time_hours", String.valueOf(time_hours))
+                                     .replaceAll("%time_minute%", String.valueOf(time_minute))
+                                     .replaceAll("%time_second%", String.valueOf(time_second));
+                             Bukkit.getOfflinePlayer(uuid).getPlayer().spigot().sendMessage(
+                                     ChatMessageType.ACTION_BAR, new TextComponent(str));
+
+
+                         } catch (NullPointerException e){
+                            playerInRegionBooleanMap.put(uuid, false);
                          }
-                         playerCooldownMap.put(uuid, (playerCooldownMap.get(uuid) - 1));
-                         int time = playerCooldownMap.get(uuid);
-                         Investment.plugin.player_data.set("players."+uuid+".second_left", time);
-                         Investment.plugin.savePlayerDataConfig();
-
-                         int time_hours = time/3600;
-                         int time_minute = (time % 3600) / 60;
-                         int time_second = time % 60;
-
-                         String str = Investment.plugin.returnReplaceMessage(true,"action-bar-message",
-                                 "time_hours", String.valueOf(time_hours))
-                                 .replaceAll("%time_minute%", String.valueOf(time_minute))
-                                 .replaceAll("%time_second%", String.valueOf(time_second));
-                         Bukkit.getOfflinePlayer(uuid).getPlayer().spigot().sendMessage(
-                                 ChatMessageType.ACTION_BAR, new TextComponent(str));
-
                      }
                  }
              }
@@ -94,15 +100,17 @@ public class CoolDownManager {
         playerInRegionBooleanMap.put(player.getUniqueId(), false);
     }
 
+    public boolean isPlayerOnRegion(Player player){
+        return playerInRegionBooleanMap.get(player.getUniqueId());
+    }
+
     public void setAllPlayersIsNotOnRegion(){
         for (UUID uuid : playerInRegionBooleanMap.keySet()){
             playerInRegionBooleanMap.put(uuid, false);
         }
     }
 
-    public boolean isPlayerOnRegion(Player player){
-        return playerInRegionBooleanMap.get(player.getUniqueId());
-    }
+
 
 
 }

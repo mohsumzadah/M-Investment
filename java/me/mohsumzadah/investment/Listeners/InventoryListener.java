@@ -21,6 +21,7 @@ public class InventoryListener implements Listener {
         InventoryView inv = event.getView();
         if(inv.getTitle().equals(Investment.plugin.gui.getString("name"))){
             if(!Investment.plugin.getCoolDownManager().isPlayerOnMap(player)) {
+                if (event.getCurrentItem() == null) return;
                 String invest_type_name = event.getCurrentItem().getItemMeta().getDisplayName();
                 for (String invest_name : Investment.plugin.invest
                         .getConfigurationSection("investments").getKeys(false)) {

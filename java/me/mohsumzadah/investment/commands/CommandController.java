@@ -72,13 +72,13 @@ public class CommandController implements CommandExecutor {
                          String invest_type = Investment.plugin.player_data.getString("players." +
                                 player.getUniqueId() +".invest_type");
                          int refund_money = Investment.plugin.invest.getInt("investments." +
-                                 invest_type+".investDeposit") * Investment.plugin.config
+                                 invest_type+".investDeposit") * Investment.plugin.settings
                                  .getInt("Settings.refund-percentage") / 100;
                          Investment.getEconomy().depositPlayer(player,refund_money);
 
 
                          Investment.plugin.getCoolDownManager().removePlayerToMap(player);
-                         int refundPercentage = Investment.plugin.config.getInt("Settings.refund-percentage");
+                         int refundPercentage = Investment.plugin.settings.getInt("Settings.refund-percentage");
                          player.sendMessage(Investment.plugin.returnReplaceMessage(false, "feedback-cancel-inv-plan",
                                  "refund_percentage", String.valueOf(refundPercentage))
                                  .replaceAll("%refund_money%", String.valueOf(refund_money)));
@@ -118,11 +118,11 @@ public class CommandController implements CommandExecutor {
                             Location first = Investment.plugin.block1;
                             Location second = Investment.plugin.block2;
                             if (first != null && second != null) {
-                                Investment.plugin.config.set("Settings.investment_area.first_block.location",
+                                Investment.plugin.settings.set("Settings.investment_area.first_block.location",
                                         first);
-                                Investment.plugin.config.set("Settings.investment_area.second_block.location",
+                                Investment.plugin.settings.set("Settings.investment_area.second_block.location",
                                         second);
-                                Investment.plugin.saveDataConfig();
+                                Investment.plugin.saveSettings();
                                 Investment.plugin.block1 = null;
                                 Investment.plugin.block2 = null;
                                 player.sendMessage(Investment.plugin.returnMessage(false, "area-selected"));
@@ -135,11 +135,11 @@ public class CommandController implements CommandExecutor {
                             }
                         }
                         else if (args[1].equalsIgnoreCase("remove")) {
-                            Investment.plugin.config.set("Settings.investment_area.first_block.location",
+                            Investment.plugin.settings.set("Settings.investment_area.first_block.location",
                                     "");
-                            Investment.plugin.config.set("Settings.investment_area.second_block.location",
+                            Investment.plugin.settings.set("Settings.investment_area.second_block.location",
                                     "");
-                            Investment.plugin.saveDataConfig();
+                            Investment.plugin.saveSettings();
                             Investment.plugin.block1 = null;
                             Investment.plugin.block2 = null;
 

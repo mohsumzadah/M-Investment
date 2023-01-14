@@ -44,7 +44,7 @@ public final class Investment extends JavaPlugin {
         coolDownManager = new CoolDownManager(plugin);
 
 
-        createConfigFile();
+        createSettings();
         createGuiFile();
         createInvestFile();
         createPlayerDataFile();
@@ -65,26 +65,26 @@ public final class Investment extends JavaPlugin {
     public Location block2 = null;
 
     //CONFIG FILE
-    private File configf;
-    public FileConfiguration config;
+    private File settingsF;
+    public FileConfiguration settings;
 
-    private void createConfigFile(){
-        configf = new File(getDataFolder(), "config.yml");
-        if(!configf.exists()){
-            configf.getParentFile().mkdirs();
-            saveResource("config.yml",false);
+    private void createSettings(){
+        settingsF = new File(getDataFolder(), "settings.yml");
+        if(!settingsF.exists()){
+            settingsF.getParentFile().mkdirs();
+            saveResource("settings.yml",false);
         }
-        config = new YamlConfiguration();
+        settings = new YamlConfiguration();
 
         try {
-            config.load(configf);
+            settings.load(settingsF);
         }catch (IOException | InvalidConfigurationException e){
             e.printStackTrace();
         }
     }
-    public void saveDataConfig(){
+    public void saveSettings(){
         try {
-            config.save(configf);
+            settings.save(settingsF);
         } catch (IOException e) {
             e.printStackTrace();
         }

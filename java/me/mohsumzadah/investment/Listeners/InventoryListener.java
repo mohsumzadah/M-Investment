@@ -47,8 +47,8 @@ public class InventoryListener implements Listener {
                             Location block2 = null;
 
                             try {
-                                block1 = (Location) Investment.plugin.config.get("Settings.investment_area.first_block.location");
-                                block2 = (Location) Investment.plugin.config.get("Settings.investment_area.second_block.location");
+                                block1 = (Location) Investment.plugin.settings.get("Settings.investment_area.first_block.location");
+                                block2 = (Location) Investment.plugin.settings.get("Settings.investment_area.second_block.location");
                             } catch (ClassCastException ignored) {
 
                             }
